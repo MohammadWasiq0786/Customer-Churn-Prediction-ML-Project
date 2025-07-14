@@ -1,0 +1,23 @@
+api:
+  host: 127.0.0.1
+  port: 8000
+data:
+  processed_data_path: data/processed/
+  random_state: 42
+  raw_data_path: data/raw/customer_data.csv
+  test_size: 0.2
+model:
+  hyperparameters:
+    max_depth: 10
+    min_samples_leaf: 2
+    min_samples_split: 5
+    n_estimators: 100
+    random_state: 42
+  model_name: RandomForestClassifier
+  target_column: churn
+monitoring:
+  drift_threshold: 0.05
+  performance_threshold: 0.85
+training:
+  experiment_name: churn_prediction
+  registered_model_name: churn_model

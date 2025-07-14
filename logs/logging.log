@@ -1,0 +1,70 @@
+2025-07-14 13:25:20,490 - __main__ - INFO - Starting training pipeline
+2025-07-14 13:25:20,490 - __main__ - INFO - Step 1: Data Ingestion
+2025-07-14 13:25:20,490 - src.data.data_ingestion - INFO - Starting data ingestion
+2025-07-14 13:25:20,490 - src.data.data_ingestion - INFO - Loading existing data
+2025-07-14 13:25:20,499 - src.data.data_ingestion - INFO - Data shape: (10000, 11)
+2025-07-14 13:25:20,546 - src.data.data_ingestion - INFO - Data ingestion completed successfully
+2025-07-14 13:25:20,546 - __main__ - INFO - Step 2: Data Validation
+2025-07-14 13:25:20,552 - src.data.data_validation - INFO - Schema validation passed
+2025-07-14 13:25:20,552 - __main__ - INFO - Step 3: Data Transformation
+2025-07-14 13:25:20,561 - src.data.data_transformation - INFO - Data transformation started
+2025-07-14 13:25:20,563 - src.data.data_transformation - INFO - Numeric features: ['age', 'tenure', 'monthly_charges', 'total_charges', 'contract_length']
+2025-07-14 13:25:20,563 - src.data.data_transformation - INFO - Categorical features: ['payment_method', 'internet_service', 'online_security', 'tech_support']
+2025-07-14 13:25:20,580 - src.data.data_transformation - INFO - Data transformation completed successfully
+2025-07-14 13:25:20,580 - __main__ - INFO - Step 4: Model Training
+2025-07-14 13:25:20,580 - src.models.model_trainer - INFO - Starting model training
+2025-07-14 13:25:20,656 - src.models.model_trainer - INFO - Training RandomForestClassifier
+2025-07-14 13:25:23,318 - src.models.model_trainer - ERROR - Error in model training: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:25:23,318 - __main__ - ERROR - Error in training pipeline: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:25:23,318 - __main__ - ERROR - Training pipeline failed: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:26:29,503 - __main__ - INFO - Starting training pipeline
+2025-07-14 13:26:29,503 - __main__ - INFO - Step 1: Data Ingestion
+2025-07-14 13:26:29,503 - src.data.data_ingestion - INFO - Starting data ingestion
+2025-07-14 13:26:29,503 - src.data.data_ingestion - INFO - Loading existing data
+2025-07-14 13:26:29,512 - src.data.data_ingestion - INFO - Data shape: (10000, 11)
+2025-07-14 13:26:29,557 - src.data.data_ingestion - INFO - Data ingestion completed successfully
+2025-07-14 13:26:29,557 - __main__ - INFO - Step 2: Data Validation
+2025-07-14 13:26:29,564 - src.data.data_validation - INFO - Schema validation passed
+2025-07-14 13:26:29,564 - __main__ - INFO - Step 3: Data Transformation
+2025-07-14 13:26:29,573 - src.data.data_transformation - INFO - Data transformation started
+2025-07-14 13:26:29,574 - src.data.data_transformation - INFO - Numeric features: ['age', 'tenure', 'monthly_charges', 'total_charges', 'contract_length']
+2025-07-14 13:26:29,574 - src.data.data_transformation - INFO - Categorical features: ['payment_method', 'internet_service', 'online_security', 'tech_support']
+2025-07-14 13:26:29,591 - src.data.data_transformation - INFO - Data transformation completed successfully
+2025-07-14 13:26:29,591 - __main__ - INFO - Step 4: Model Training
+2025-07-14 13:26:29,592 - src.models.model_trainer - INFO - Starting model training
+2025-07-14 13:26:29,666 - src.models.model_trainer - INFO - Training RandomForestClassifier
+2025-07-14 13:26:32,261 - src.models.model_trainer - ERROR - Error in model training: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:26:32,261 - __main__ - ERROR - Error in training pipeline: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:26:32,261 - __main__ - ERROR - Training pipeline failed: [Errno 30] Read-only file system: '/D:'
+2025-07-14 13:30:28,886 - __main__ - INFO - Starting training pipeline
+2025-07-14 13:30:28,886 - __main__ - INFO - Step 1: Data Ingestion
+2025-07-14 13:30:28,886 - src.data.data_ingestion - INFO - Starting data ingestion
+2025-07-14 13:30:28,886 - src.data.data_ingestion - INFO - Loading existing data
+2025-07-14 13:30:28,895 - src.data.data_ingestion - INFO - Data shape: (10000, 11)
+2025-07-14 13:30:28,940 - src.data.data_ingestion - INFO - Data ingestion completed successfully
+2025-07-14 13:30:28,941 - __main__ - INFO - Step 2: Data Validation
+2025-07-14 13:30:28,947 - src.data.data_validation - INFO - Schema validation passed
+2025-07-14 13:30:28,947 - __main__ - INFO - Step 3: Data Transformation
+2025-07-14 13:30:28,956 - src.data.data_transformation - INFO - Data transformation started
+2025-07-14 13:30:28,958 - src.data.data_transformation - INFO - Numeric features: ['age', 'tenure', 'monthly_charges', 'total_charges', 'contract_length']
+2025-07-14 13:30:28,958 - src.data.data_transformation - INFO - Categorical features: ['payment_method', 'internet_service', 'online_security', 'tech_support']
+2025-07-14 13:30:28,974 - src.data.data_transformation - INFO - Data transformation completed successfully
+2025-07-14 13:30:28,974 - __main__ - INFO - Step 4: Model Training
+2025-07-14 13:30:28,974 - src.models.model_trainer - INFO - Starting model training
+2025-07-14 13:30:29,050 - src.models.model_trainer - INFO - Training RandomForestClassifier
+2025-07-14 13:30:31,707 - src.models.model_trainer - INFO - RandomForestClassifier - Accuracy: 0.7210, AUC: 0.7309
+2025-07-14 13:30:31,712 - src.models.model_trainer - INFO - Training LogisticRegression
+2025-07-14 13:30:33,329 - src.models.model_trainer - INFO - LogisticRegression - Accuracy: 0.7030, AUC: 0.6902
+2025-07-14 13:30:33,335 - src.models.model_trainer - INFO - Training SVC
+2025-07-14 13:30:41,496 - src.models.model_trainer - INFO - SVC - Accuracy: 0.7075, AUC: 0.6989
+2025-07-14 13:30:41,512 - src.models.model_trainer - INFO - Best model (RandomForestClassifier) saved with accuracy: 0.7210
+2025-07-14 13:30:41,512 - __main__ - INFO - Training pipeline completed successfully
+2025-07-14 13:34:41,344 - api.main - INFO - Starting up the application...
+2025-07-14 13:34:42,151 - src.pipeline.prediction_pipeline - INFO - Model and preprocessor loaded successfully
+2025-07-14 13:34:42,151 - api.main - INFO - Prediction pipeline loaded successfully
+2025-07-14 13:37:15,671 - api.main - INFO - Prediction made: 0, probability: 0.168
+2025-07-14 13:37:26,044 - api.main - INFO - Prediction made: 0, probability: 0.168
+2025-07-14 13:40:10,635 - api.main - INFO - Prediction made: 0, probability: 0.168
+2025-07-14 13:41:50,136 - api.main - INFO - Prediction made: 0, probability: 0.168
+2025-07-14 13:43:08,342 - api.main - INFO - Batch prediction completed for 5 customers
+2025-07-14 13:44:02,685 - api.main - INFO - Batch prediction completed for 5 customers

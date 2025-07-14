@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Info - Churn Prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .nav { background: #f8f9fa; padding: 15px; text-align: center; }
+        .nav a { margin: 0 15px; color: #007bff; text-decoration: none; padding: 10px 20px; border-radius: 5px; }
+        .nav a:hover { background: #e9ecef; }
+        .content { padding: 30px; }
+        .endpoint { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 4px solid #007bff; }
+        .method { background: #007bff; color: white; padding: 4px 8px; border-radius: 3px; font-size: 0.8em; }
+        .method.post { background: #28a745; }
+        .method.get { background: #17a2b8; }
+        pre { background: #2d3748; color: #f7fafc; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 API Information</h1>
+            <p>Complete guide to the Churn Prediction API</p>
+        </div>
+        <div class="nav">
+            <a href="/">🏠 Dashboard</a>
+            <a href="/about">ℹ️ About</a>
+            <a href="/analytics">📊 Analytics</a>
+            <a href="/api-info">🔗 API Info</a>
+            <a href="/docs">📚 Swagger</a>
+        </div>
+        <div class="content">
+            <h2>🚀 Available Endpoints</h2>
+            
+            <div class="endpoint">
+                <h3><span class="method post">POST</span> /predict</h3>
+                <p><strong>Description:</strong> Predict churn for a single customer</p>
+                <pre>curl -X POST "http://localhost:8000/predict" \
+     -H "Content-Type: application/json" \
+     -d '{"age": 35, "tenure": 12, "monthly_charges": 75.5}'</pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

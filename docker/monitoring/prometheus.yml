@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'churn-prediction-api'
+    static_configs:
+      - targets: ['churn-prediction-api:8000']

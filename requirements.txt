@@ -1,0 +1,42 @@
+# Core ML libraries
+pandas
+numpy
+scikit-learn
+joblib
+
+# ML Experiment Tracking
+mlflow
+
+# API Framework
+fastapi
+uvicorn[standard]
+pydantic
+
+# Templates and Static Files
+jinja2
+
+# Data validation and monitoring
+scipy
+
+# Configuration and utilities
+PyYAML
+python-dotenv
+
+# Monitoring and logging
+prometheus-client
+
+# Plotting
+matplotlib
+seaborn
+
+# Testing
+pytest
+pytest-cov
+
+# Development tools
+black
+flake8
+
+# HTTP client for health checks
+requests
+ipykernel

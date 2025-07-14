@@ -1,0 +1,6 @@
+age,tenure,monthly_charges,total_charges,contract_length,payment_method,internet_service,online_security,tech_support
+25,5,85.5,427.5,1,Electronic Check,Fiber Optic,No,No
+45,24,65.2,1564.8,24,Credit Card,DSL,Yes,Yes
+35,12,75.0,900.0,12,Bank Transfer,Fiber Optic,Yes,Yes
+55,36,55.8,2008.8,24,Credit Card,DSL,Yes,Yes
+28,8,95.3,762.4,1,Electronic Check,Fiber Optic,No,No

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Prediction Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .prediction-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .risk-low { border-left-color: #28a745; }
+        .risk-medium { border-left-color: #ffc107; }
+        .risk-high { border-left-color: #dc3545; }
+
+        .prediction-result {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .probability-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .probability-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .batch-upload {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border-top: 2px solid #667eea;
+        }
+
+        .file-upload {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .statistics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Customer Churn Prediction</h1>
+            <p>Advanced ML-powered customer retention analysis</p>
+            <p>Created by - Mohammad Wasiq</p>
+            <div class="nav-links">
+                <a href="/" class="nav-link">🏠 Dashboard</a>
+                <a href="about.html" class="nav-link">ℹ️ About</a>
+                <a href="analytics.html" class="nav-link">📊 Analytics</a>
+                <a href="api_info.html" class="nav-link">🔗 API Info</a>
+                <a href="docs" class="nav-link">📚 Swagger</a>
+                <a href="health" class="nav-link">❤️ Health</a>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Input Form -->
+            <div class="form-section">
+                <h2>📊 Customer Information</h2>
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="18" max="100" value="35" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tenure">Tenure (months)</label>
+                        <input type="number" id="tenure" name="tenure" min="0" max="100" value="12" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthly_charges">Monthly Charges ($)</label>
+                        <input type="number" id="monthly_charges" name="monthly_charges" min="0" max="500" step="0.01" value="75.50" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="total_charges">Total Charges ($)</label>
+                        <input type="number" id="total_charges" name="total_charges" min="0" max="10000" step="0.01" value="1200.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contract_length">Contract Length</label>
+                        <select id="contract_length" name="contract_length" required>
+                            <option value="1">Month-to-month</option>
+                            <option value="12" selected>One year</option>
+                            <option value="24">Two year</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment_method">Payment Method</label>
+                        <select id="payment_method" name="payment_method" required>
+                            <option value="Credit Card" selected>Credit Card</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Electronic Check">Electronic Check</option>
+                            <option value="Mailed Check">Mailed Check</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="internet_service">Internet Service</label>
+                        <select id="internet_service" name="internet_service" required>
+                            <option value="DSL">DSL</option>
+                            <option value="Fiber Optic" selected>Fiber Optic</option>
+                            <option value="No">No Internet</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="online_security">Online Security</label>
+                        <select id="online_security" name="online_security" required>
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tech_support">Tech Support</label>
+                        <select id="tech_support" name="tech_support" required>
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn" id="predictBtn">
+                        🔮 Predict Churn Risk
+                    </button>
+                </form>
+
+                <!-- Batch Upload Section -->
+                <div class="batch-upload">
+                    <h3>📁 Batch Prediction</h3>
+                    <div class="file-upload" id="fileUpload">
+                        <p>📤 Click to upload CSV file or drag and drop</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                    </div>
+                    <button type="button" class="btn" id="batchPredictBtn" style="margin-top: 10px;" disabled>
+                        Predict Batch
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-section">
+                <h2>🎯 Prediction Results</h2>
+                
+                <div id="loadingIndicator" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing customer data...</p>
+                </div>
+
+                <div id="errorMessage" class="error" style="display: none;"></div>
+
+                <div id="predictionResults" style="display: none;">
+                    <div id="predictionCard" class="prediction-card">
+                        <div id="predictionResult" class="prediction-result"></div>
+                        <div class="probability-bar">
+                            <div id="probabilityFill" class="probability-fill"></div>
+                        </div>
+                        <div id="probabilityText"></div>
+                        <div id="riskLevel"></div>
+                        <div id="recommendations"></div>
+                    </div>
+                </div>
+
+                <div id="batchResults" style="display: none;">
+                    <h3>📊 Batch Results</h3>
+                    <div class="statistics" id="batchStatistics"></div>
+                    <canvas id="batchChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- API Status -->
+                <div id="apiStatus" class="stat-item">
+                    <div class="stat-label">API Status</div>
+                    <div id="statusIndicator" class="stat-number">Checking...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ChurnPredictionApp {
+            constructor() {
+                this.apiBaseUrl = window.location.origin;
+                this.init();
+                this.checkApiStatus();
+            }
+
+            init() {
+                // Form submission
+                document.getElementById('predictionForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.makePrediction();
+                });
+
+                // File upload
+                document.getElementById('fileUpload').addEventListener('click', () => {
+                    document.getElementById('csvFile').click();
+                });
+
+                document.getElementById('csvFile').addEventListener('change', (e) => {
+                    this.handleFileUpload(e);
+                });
+
+                document.getElementById('batchPredictBtn').addEventListener('click', () => {
+                    this.makeBatchPrediction();
+                });
+
+                // Drag and drop
+                const fileUpload = document.getElementById('fileUpload');
+                fileUpload.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    fileUpload.style.borderColor = '#667eea';
+                });
+
+                fileUpload.addEventListener('dragleave', () => {
+                    fileUpload.style.borderColor = '#ccc';
+                });
+
+                fileUpload.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    fileUpload.style.borderColor = '#ccc';
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        document.getElementById('csvFile').files = files;
+                        this.handleFileUpload({ target: { files } });
+                    }
+                });
+            }
+
+            async checkApiStatus() {
+                try {
+                    const response = await fetch(`${this.apiBaseUrl}/health`);
+                    const data = await response.json();
+                    
+                    const statusElement = document.getElementById('statusIndicator');
+                    if (response.ok && data.status === 'healthy') {
+                        statusElement.textContent = '✅ Online';
+                        statusElement.style.color = '#28a745';
+                    } else {
+                        statusElement.textContent = '❌ Offline';
+                        statusElement.style.color = '#dc3545';
+                    }
+                } catch (error) {
+                    const statusElement = document.getElementById('statusIndicator');
+                    statusElement.textContent = '🔄 Connecting...';
+                    statusElement.style.color = '#ffc107';
+                    
+                    // Retry after 5 seconds
+                    setTimeout(() => this.checkApiStatus(), 5000);
+                }
+            }
+
+            async makePrediction() {
+                this.showLoading();
+                
+                try {
+                    const formData = new FormData(document.getElementById('predictionForm'));
+                    const customerData = {
+                        age: parseFloat(formData.get('age')),
+                        tenure: parseFloat(formData.get('tenure')),
+                        monthly_charges: parseFloat(formData.get('monthly_charges')),
+                        total_charges: parseFloat(formData.get('total_charges')),
+                        contract_length: parseInt(formData.get('contract_length')),
+                        payment_method: formData.get('payment_method'),
+                        internet_service: formData.get('internet_service'),
+                        online_security: formData.get('online_security'),
+                        tech_support: formData.get('tech_support')
+                    };
+
+                    const response = await fetch(`${this.apiBaseUrl}/predict`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(customerData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    this.displayPredictionResult(result);
+
+                } catch (error) {
+                    this.showError(`Prediction failed: ${error.message}`);
+                } finally {
+                    this.hideLoading();
+                }
+            }
+
+            displayPredictionResult(result) {
+                const resultsDiv = document.getElementById('predictionResults');
+                const predictionCard = document.getElementById('predictionCard');
+                const predictionResult = document.getElementById('predictionResult');
+                const probabilityFill = document.getElementById('probabilityFill');
+                const probabilityText = document.getElementById('probabilityText');
+                const riskLevel = document.getElementById('riskLevel');
+                const recommendations = document.getElementById('recommendations');
+
+                // Set prediction text
+                const willChurn = result.churn_prediction === 1;
+                predictionResult.textContent = willChurn ? 
+                    '⚠️ High Churn Risk' : '✅ Low Churn Risk';
+                predictionResult.style.color = willChurn ? '#dc3545' : '#28a745';
+
+                // Set probability bar
+                const probability = result.churn_probability * 100;
+                probabilityFill.style.width = `${probability}%`;
+                probabilityFill.style.backgroundColor = this.getRiskColor(result.risk_level);
+                
+                probabilityText.textContent = `Churn Probability: ${probability.toFixed(1)}%`;
+                
+                // Set risk level
+                riskLevel.innerHTML = `<strong>Risk Level:</strong> <span style="color: ${this.getRiskColor(result.risk_level)}">${result.risk_level}</span>`;
+
+                // Set card border color
+                predictionCard.className = `prediction-card risk-${result.risk_level.toLowerCase()}`;
+
+                // Generate recommendations
+                recommendations.innerHTML = this.generateRecommendations(result);
+
+                resultsDiv.style.display = 'block';
+            }
+
+            generateRecommendations(result) {
+                let recommendations = '<div style="margin-top: 15px;"><strong>💡 Recommendations:</strong><ul style="margin-left: 20px; margin-top: 10px;">';
+                
+                if (result.risk_level === 'High') {
+                    recommendations += `
+                        <li>🎯 Immediate retention campaign required</li>
+                        <li>📞 Schedule personal contact within 48 hours</li>
+                        <li>💰 Consider offering special discount or upgrade</li>
+                        <li>🔄 Review contract terms and service quality</li>
+                    `;
+                } else if (result.risk_level === 'Medium') {
+                    recommendations += `
+                        <li>📧 Send targeted email campaign</li>
+                        <li>🎁 Offer loyalty rewards or benefits</li>
+                        <li>📞 Proactive customer service call</li>
+                        <li>📊 Monitor account activity closely</li>
+                    `;
+                } else {
+                    recommendations += `
+                        <li>✅ Customer is in good standing</li>
+                        <li>🌟 Continue providing excellent service</li>
+                        <li>📈 Consider upselling opportunities</li>
+                        <li>💌 Include in customer satisfaction surveys</li>
+                    `;
+                }
+                
+                recommendations += '</ul></div>';
+                return recommendations;
+            }
+
+            getRiskColor(riskLevel) {
+                switch(riskLevel.toLowerCase()) {
+                    case 'low': return '#28a745';
+                    case 'medium': return '#ffc107';
+                    case 'high': return '#dc3545';
+                    default: return '#6c757d';
+                }
+            }
+
+            handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (file && file.type === 'text/csv') {
+                    document.querySelector('#fileUpload p').textContent = `📄 ${file.name} selected`;
+                    document.getElementById('batchPredictBtn').disabled = false;
+                } else {
+                    this.showError('Please select a valid CSV file');
+                }
+            }
+
+            async makeBatchPrediction() {
+                const fileInput = document.getElementById('csvFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    this.showError('Please select a CSV file first');
+                    return;
+                }
+
+                this.showLoading();
+
+                try {
+                    // Parse CSV file
+                    const text = await file.text();
+                    const customers = this.parseCSV(text);
+                    
+                    if (customers.length === 0) {
+                        throw new Error('No valid customer data found in CSV');
+                    }
+
+                    // Make batch prediction
+                    const response = await fetch(`${this.apiBaseUrl}/batch_predict`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(customers)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    this.displayBatchResults(result.predictions);
+
+                } catch (error) {
+                    this.showError(`Batch prediction failed: ${error.message}`);
+                } finally {
+                    this.hideLoading();
+                }
+            }
+
+            parseCSV(text) {
+                const lines = text.split('\n').filter(line => line.trim());
+                if (lines.length < 2) return [];
+
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                const customers = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    if (values.length !== headers.length) continue;
+
+                    const customer = {};
+                    headers.forEach((header, index) => {
+                        const value = values[index].replace(/"/g, '');
+                        
+                        // Convert to appropriate types
+                        if (['age', 'tenure', 'monthly_charges', 'total_charges'].includes(header)) {
+                            customer[header] = parseFloat(value) || 0;
+                        } else if (header === 'contract_length') {
+                            customer[header] = parseInt(value) || 1;
+                        } else {
+                            customer[header] = value;
+                        }
+                    });
+
+                    // Validate required fields
+                    if (this.isValidCustomer(customer)) {
+                        customers.push(customer);
+                    }
+                }
+
+                return customers;
+            }
+
+            isValidCustomer(customer) {
+                const required = ['age', 'tenure', 'monthly_charges', 'total_charges', 
+                                 'contract_length', 'payment_method', 'internet_service', 
+                                 'online_security', 'tech_support'];
+                return required.every(field => customer.hasOwnProperty(field));
+            }
+
+            displayBatchResults(predictions) {
+                const batchResults = document.getElementById('batchResults');
+                const batchStatistics = document.getElementById('batchStatistics');
+
+                // Calculate statistics
+                const total = predictions.length;
+                const highRisk = predictions.filter(p => p.risk_level === 'High').length;
+                const mediumRisk = predictions.filter(p => p.risk_level === 'Medium').length;
+                const lowRisk = predictions.filter(p => p.risk_level === 'Low').length;
+                const avgProbability = predictions.reduce((sum, p) => sum + p.churn_probability, 0) / total;
+
+                // Display statistics
+                batchStatistics.innerHTML = `
+                    <div class="stat-item">
+                        <div class="stat-number">${total}</div>
+                        <div class="stat-label">Total Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #dc3545">${highRisk}</div>
+                        <div class="stat-label">High Risk</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #ffc107">${mediumRisk}</div>
+                        <div class="stat-label">Medium Risk</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #28a745">${lowRisk}</div>
+                        <div class="stat-label">Low Risk</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${(avgProbability * 100).toFixed(1)}%</div>
+                        <div class="stat-label">Avg Churn Risk</div>
+                    </div>
+                `;
+
+                // Create chart
+                this.createBatchChart([highRisk, mediumRisk, lowRisk]);
+
+                batchResults.style.display = 'block';
+            }
+
+            createBatchChart(data) {
+                const canvas = document.getElementById('batchChart');
+                const ctx = canvas.getContext('2d');
+
+                // Destroy existing chart if it exists
+                if (this.batchChart) {
+                    this.batchChart.destroy();
+                }
+
+                this.batchChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+                        datasets: [{
+                            data: data,
+                            backgroundColor: ['#dc3545', '#ffc107', '#28a745'],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Risk Distribution'
+                            }
+                        }
+                    }
+                });
+            }
+
+            showLoading() {
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('predictionResults').style.display = 'none';
+                document.getElementById('batchResults').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
+                document.getElementById('predictBtn').disabled = true;
+            }
+
+            hideLoading() {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('predictBtn').disabled = false;
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                document.getElementById('predictionResults').style.display = 'none';
+                document.getElementById('batchResults').style.display = 'none';
+            }
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new ChurnPredictionApp();
+        });
+    </script>
+</body>
+</html>
